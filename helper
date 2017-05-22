@@ -4,8 +4,8 @@ if [[ "$1" == "build" ]]; then
   make ARCH=arm CROSS_COMPILE=arm-none-eabi- all
 elif [[ "$1" == "run" ]]; then
   cd arch/arm/boot
-  qemu-system-arm -M versatilepb -m 128M -kernel zImage -initrd rootfs -append "root=/dev/ram rdinit=/test" -s
+  qemu-system-arm -M versatilepb -m 128M -kernel zImage -initrd rootfs -append "root=/dev/ram rdinit=/init" -s
 elif [[ "$1" == "runS" ]]; then
   cd arch/arm/boot
-  qemu-system-arm -M versatilepb -m 128M -kernel zImage -initrd rootfs -append "root=/dev/ram rdinit=/test" -s -S
+  qemu-system-arm -M versatilepb -m 128M -kernel zImage -initrd rootfs -append "root=/dev/ram rdinit=/init" -s -S
 fi

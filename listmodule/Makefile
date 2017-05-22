@@ -1,5 +1,5 @@
 #####Makefile Start#####
 
-obj-y := insere.o
+obj-y := listmodule.o
 
 #####Makefile End#######

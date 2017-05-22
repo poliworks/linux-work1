@@ -1,6 +1,6 @@
 #! /bin/sh
 
 if [[ "$1" == "build" ]]; then
-  arm-none-linux-gnueabi-gcc -static test.c -o test
-  echo test | cpio -o --format=newc > rootfs
+  arm-none-linux-gnueabi-gcc -static init.c -o init
+  echo init | cpio -o --format=newc > rootfs
 fi
