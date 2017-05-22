@@ -9,15 +9,14 @@ int remove();
 int getSize();
 
 asmlinkage long sys_insere(int i) {
-  // init_module();
   int x = insert(i);
   return x;
 }
 asmlinkage long sys_remove() {
-  // init_module();
   int nerror = remove();
   return nerror;
 }
+
 struct Item {
     int value;
     struct list_head list;
@@ -62,8 +61,6 @@ int remove() {
 
 int __init init_module(void) {
   printk(KERN_INFO "Initialize InsereModule");
-//  hatefulList = LIST_HEAD_INIT(hatefulList);
-
   return 0;
 }
 void __exit cleanup_module(void) {
