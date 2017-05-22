@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <linux/unistd.h>
 #include <linux/kernel.h>
 #include <linux/time.h>
@@ -11,6 +12,7 @@ int syscall_remove();
 void p_sleep(long long int i);
 void insere_process();
 void remove_process();
+void msleep(int ms);
 
 int main(void) {
   printf("Hello world!\n");
@@ -34,7 +36,6 @@ int syscall_remove() {
 
 void insere_process() {
   int i = 1;
-  long long int throttle = 1;
   while(1) {
     int x = syscall_insere(i);
     i++;
@@ -43,13 +44,12 @@ void insere_process() {
     } else {
       printf("Inserted %d!\n", i);
     }
-    sleep(throttle);
+    msleep(500);
   }
   return;
 }
 
 void remove_process() {
-  long long int throttle = 1;
   while(1) {
     int nerror = syscall_remove();
     if (nerror == -1) {
@@ -57,15 +57,12 @@ void remove_process() {
     } else {
       printf("Removed %d!\n", nerror);
     }
-    sleep(throttle);
+    msleep(1000);
   }
   return;
 }
 
-void p_sleep(long long int i) {
-  long long int x = 0;
-  while (x < i) {
-    x++;
-    printf("%10lld\b\b\b\b\b\b\b\b\b\b", x);
-  }
+void msleep(int ms) {
+  usleep(ms * 1000);
+  return;
 }
