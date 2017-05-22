@@ -59,4 +59,8 @@ asmlinkage long sys_rt_sigaction(int sig, const struct sigaction __user *act,
 			 struct sigaction __user *oact, size_t sigsetsize);
 #endif
 
+#ifndef sys_insere
+asmlinkage long sys_insere(int i);
+#endif
+
 #endif /* __ASM_GENERIC_SYSCALLS_H */

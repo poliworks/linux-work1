@@ -815,7 +815,6 @@ __SYSCALL(__NR_fork, sys_fork)
 #else
 __SYSCALL(__NR_fork, sys_ni_syscall)
 #endif /* CONFIG_MMU */
-
 #undef __NR_syscalls
 #define __NR_syscalls (__NR_fork+1)
 
