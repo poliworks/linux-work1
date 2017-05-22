@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <linux/unistd.h>
 #include <linux/kernel.h>
+#include <linux/time.h>
 
 #define __NR_insere 374
 #define __NR_remove 375
@@ -33,30 +34,30 @@ int syscall_remove() {
 
 void insere_process() {
   int i = 1;
-  long long int throttle = 1000;
+  long long int throttle = 1;
   while(1) {
     int x = syscall_insere(i);
     i++;
     if (x == -1) {
       printf("ERROR: Its over 100!\n");
     } else {
-      printf("Inserted!\n");
+      printf("Inserted %d!\n", i);
     }
-    p_sleep(throttle);
+    sleep(throttle);
   }
   return;
 }
 
 void remove_process() {
-  long long int throttle = 1000;
+  long long int throttle = 1;
   while(1) {
     int nerror = syscall_remove();
     if (nerror == -1) {
       printf("ERROR: List is empty!\n");
     } else {
-      printf("Removed!\n");
+      printf("Removed %d!\n", nerror);
     }
-    p_sleep(throttle*100);
+    sleep(throttle);
   }
   return;
 }
