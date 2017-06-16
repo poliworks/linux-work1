@@ -6,9 +6,11 @@
 
 #define __NR_insere 374
 #define __NR_remove 375
+#define __NR_cfs 376
 
 int syscall_insere(int i);
 int syscall_remove();
+int syscall_cfs();
 void p_sleep(long long int i);
 void insere_process();
 void remove_process();
@@ -16,19 +18,16 @@ void msleep(int ms);
 
 int main(void) {
   printf("Init!\n");
-  int insert_process = fork();
-  if (insert_process == 0) {
-    insere_process();
-  } else {
-    remove_process();
-  }
+  syscall_cfs();
   return 0;
 }
 
 int syscall_insere(int i) {
   return syscall(__NR_insere, i);
 }
-
+int syscall_cfs() {
+  return syscall(__NR_cfs);
+}
 int syscall_remove() {
   return syscall(__NR_remove);
 }

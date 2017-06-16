@@ -402,6 +402,7 @@
 #define __NR_syncfs			(__NR_SYSCALL_BASE+373)
 #define __NR_insere			(__NR_SYSCALL_BASE+374)
 #define __NR_remove			(__NR_SYSCALL_BASE+375)
+#define __NR_cfs			(__NR_SYSCALL_BASE+376)
 
 /*
  * The following SWIs are ARM private.

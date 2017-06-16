@@ -385,6 +385,7 @@
 		CALL(sys_syncfs)
 		CALL(sys_insere)
 /* 375 */	CALL(sys_remove)
+		CALL(sys_cfs)
 #ifndef syscalls_counted
 .equ syscalls_padding, ((NR_syscalls + 3) & ~3) - NR_syscalls
 #define syscalls_counted
