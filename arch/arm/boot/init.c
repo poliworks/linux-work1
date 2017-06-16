@@ -15,14 +15,13 @@ void remove_process();
 void msleep(int ms);
 
 int main(void) {
-  printf("Hello world!\n");
+  printf("Init!\n");
   int insert_process = fork();
   if (insert_process == 0) {
     insere_process();
   } else {
     remove_process();
   }
-  while(1) { }
   return 0;
 }
 
@@ -44,7 +43,7 @@ void insere_process() {
     } else {
       printf("Inserted %d!\n", i);
     }
-    msleep(500);
+    msleep(50);
   }
   return;
 }
@@ -57,7 +56,7 @@ void remove_process() {
     } else {
       printf("Removed %d!\n", nerror);
     }
-    msleep(1000);
+    msleep(100);
   }
   return;
 }
