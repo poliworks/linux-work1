@@ -583,12 +583,12 @@ static inline int cpu_of(struct rq *rq)
  */
 #define for_each_domain(cpu, __sd) \
 	for (__sd = rcu_dereference_check_sched_domain(cpu_rq(cpu)->sd); __sd; __sd = __sd->parent)
-
-#define cpu_rq(cpu)		(&per_cpu(runqueues, (cpu)))
-#define this_rq()		(&__get_cpu_var(runqueues))
-#define task_rq(p)		cpu_rq(task_cpu(p))
-#define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
-#define raw_rq()		(&__raw_get_cpu_var(runqueues))
+// 
+// #define cpu_rq(cpu)		(&per_cpu(runqueues, (cpu)))
+// #define this_rq()		(&__get_cpu_var(runqueues))
+// #define task_rq(p)		cpu_rq(task_cpu(p))
+// #define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
+// #define raw_rq()		(&__raw_get_cpu_var(runqueues))
 
 #ifdef CONFIG_CGROUP_SCHED
 
@@ -9482,4 +9482,3 @@ struct cgroup_subsys cpuacct_subsys = {
 	.subsys_id = cpuacct_subsys_id,
 };
 #endif	/* CONFIG_CGROUP_CPUACCT */
-
