@@ -17,49 +17,307 @@ void remove_process();
 void msleep(int ms);
 
 int main(void) {
-  printf("Init!\n");
-  int x = 0;
-  int a = fork();
-  printf("\na = %d\n", a);
-  if (a == 0) {
+  if (fork() == 0) {
+    // INIT
     while(1) {
-//        printf("Init\n");
-        msleep(1000);
+//        printf("Init!\n");
+//        msleep(1000);
         syscall_cfs();
     }
-  } else {
-//    while(1) {}
-    int b = fork();
-
-  printf("b = %d\n", b);
-    if (b == 0) {
-        int filho = 0;
-        while(1) {
-
-//           msleep(1000);
-           filho++;
-//            printf("Filho!\n");
-        }
-    } else {
-        int neto = 0;
-        while(1) {
-            msleep(1000);
-            neto++;
-//            printf("Neto!\n");
-        }
-    }
-//      printf("Filho Fork");
-//      while(1) {
-//        x++;
-//      }
-//    } else {
-//      printf("Neto");
-//      while(1) {
-//        x--;
-//      }
-//    }
-
   }
+  else if (fork() == 0) {
+     // filho
+     int filho = 0;
+     while(1) {
+        filho = filho++ * 39;
+        //printf("filho : %d\n", filho);
+     }
+  } else if (fork() == 0) {
+    // neto
+    int neto = 0;
+    while(1) {
+        neto += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+  } else if (fork() == 0) {
+    // neto
+    int testchildrens = 0;
+    while(1) {
+        testchildrens += 13;
+        //printf("%d\n", neto);
+    }
+
+  } else {
+    //printf("Tataraneto\n");
+    while(1) {}
+  }
+
   return 0;
 }
 

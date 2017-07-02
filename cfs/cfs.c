@@ -2,22 +2,25 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/list.h>
- #include <linux/sched.h>
- #include  <linux/slab.h>
+
+#include <linux/sched.h>
+#include  <linux/slab.h>
+
 // #include <../kernel/sched.c>
-struct piroca {
+
+struct cfsunit {
     u64 vruntime;
     pid_t pid;
     struct rb_node *node;
-    struct piroca *next, *prev;
+    struct cfsunit *next, *prev;
 };
-struct piroca* order_rb_tree(struct rb_node *root);
+struct cfsunit* order_rb_tree(struct rb_node *root);
 
-struct piroca* order_rb_tree(struct rb_node *root) {
+struct cfsunit* order_rb_tree(struct rb_node *root) {
 //    printk("order rb_node %p\n", root);
-    struct piroca *right, *left, *aux;
-    struct piroca *result;
-    result = kmalloc(sizeof(struct piroca), GFP_KERNEL);
+    struct cfsunit *right, *left, *aux;
+    struct cfsunit *result;
+    result = kmalloc(sizeof(struct cfsunit), GFP_KERNEL);
 
     result->node = root;
     if(root->rb_left != NULL && root->rb_right != NULL) {
@@ -64,10 +67,12 @@ struct piroca* order_rb_tree(struct rb_node *root) {
         result->prev = NULL;
         return result;
     }
-
+    return result; // should never return here
 }
 
 asmlinkage long sys_cfs() {
+//    struct rq *rq = this_rq();
+//    printk("rq = %p", rq);
    //      a
    //    /   \
    //   b     c
@@ -93,16 +98,7 @@ asmlinkage long sys_cfs() {
 //  printk("d %p\n", &d);
 //  printk("e %p\n", &e);
 //  printk("f %p\n", &f);
-  struct piroca *pinto, *aux;
-//  pinto = order_rb_tree(&a);
-//  printk("Pinto: %p\n", pinto);
-//  aux = pinto;
-//  while(aux != NULL) {
-//    printk("%p\n", aux->node);
-//    aux = aux->next;
-//  }
-//  printk("expected:\n");
-//
+  struct cfsunit *cfsu, *aux;
 //  printk("d %p\n", &d);
 //  printk("b %p\n", &b);
 //  printk("e %p\n", &e);
@@ -110,16 +106,31 @@ asmlinkage long sys_cfs() {
 //  printk("c %p\n", &c);
 //  printk("f %p\n", &f);
   struct sched_entity *se_right, *se_left, *sce;
-  struct task_struct *ts = NULL;
+  struct task_struct *ts = NULL, *testcurrent = NULL, *rootcfsunit;
   struct rb_node root = current->se.run_node;
-  pinto = order_rb_tree(&root);
-  aux = pinto;
-  printk("\n pid  | vruntime\n");
+//  printk("root: %p", root);
+//  printk("Init Test\n");
+//  testcurrent = current;
+//  while(testcurrent != NULL) {
+//    printk("%p\n", testcurrent);
+//    struct rb_root *testroot = &(testcurrent->pi_waiters);
+//    struct rb_node *n = &(testcurrent->se.run_node);
+//    printk("testroot pi_waiters: %p %p %p\n", n, n->rb_left,n->rb_right);
+//    if(testcurrent == testcurrent->real_parent) {
+//        rootcfsunit = testcurrent;
+//        testcurrent = NULL;
+//    } else {
+//        testcurrent = testcurrent->real_parent;
+//    }
+//  }
+  cfsu = order_rb_tree(&root);
+  aux = cfsu;
+  printk("\n         pid |   vruntime\n");
   while(aux != NULL) {
 //    printk("%p\n", aux->node);
     sce = container_of(aux->node, struct sched_entity, run_node);
     ts = container_of(sce, struct task_struct, se);
-    printk(" %4ld | %lld\n", (long)ts->pid, sce->vruntime);
+    printk(" %11ld | %lld\n", (long)ts->pid, sce->vruntime);
     aux = aux->next;
   }
   return 0;
