@@ -489,18 +489,68 @@ static irqreturn_t amba_kmi_int(int irq, void *dev_id)
 Podemos notar que o `amba_kmi_init` é chamado passando-se o `dev_id` (device id)
 o `dev_id` é então atribuído ao `kmi` (que é um `amba_kmi_port`) e é passado o `kmi->io` para o `serio_interrupt`
 #### 3. Quando usamos a _system call_ `getchar()`, o caractér do teclado é lido de algum port. Na verdade, se lê a posição da tecla. Localize isso no código.
-No driver /drivers/input/keyboard/bcm-keypad.c, temos
+No driver /drivers/input/keyboard/matrix_keypad.c, temos
 ```c
 /*
  * Returns the keycode from the input device keymap given the row and
  * column.
  */
 static int bcm_kp_get_keycode(struct bcm_kp *kp, int row, int col)
+static void matrix_keypad_scan(struct work_struct *work)
 {
-	unsigned int row_shift = get_count_order(kp->n_cols);
-	unsigned short *keymap = kp->input_dev->keycode;
+	struct matrix_keypad *keypad =
+		container_of(work, struct matrix_keypad, work.work);
+	struct input_dev *input_dev = keypad->input_dev;
+	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
+	uint32_t new_state[MATRIX_MAX_COLS];
+	int row, col, code;
 
-	return keymap[MATRIX_SCAN_CODE(row, col, row_shift)];
+	/* de-activate all columns for scanning */
+	activate_all_cols(pdata, false);
+
+	memset(new_state, 0, sizeof(new_state));
+
+	/* assert each column and read the row status out */
+	for (col = 0; col < pdata->num_col_gpios; col++) {
+
+		activate_col(pdata, col, true);
+
+		for (row = 0; row < pdata->num_row_gpios; row++)
+			new_state[col] |=
+				row_asserted(pdata, row) ? (1 << row) : 0;
+
+		activate_col(pdata, col, false);
+	}
+
+	for (col = 0; col < pdata->num_col_gpios; col++) {
+		uint32_t bits_changed;
+
+		bits_changed = keypad->last_key_state[col] ^ new_state[col];
+		if (bits_changed == 0)
+			continue;
+
+		for (row = 0; row < pdata->num_row_gpios; row++) {
+			if ((bits_changed & (1 << row)) == 0)
+				continue;
+
+			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
+			input_event(input_dev, EV_MSC, MSC_SCAN, code);
+			input_report_key(input_dev,
+					 keypad->keycodes[code],
+					 new_state[col] & (1 << row));
+		}
+	}
+	input_sync(input_dev);
+
+	memcpy(keypad->last_key_state, new_state, sizeof(new_state));
+
+	activate_all_cols(pdata, true);
+
+	/* Enable IRQs again */
+	spin_lock_irq(&keypad->lock);
+	keypad->scan_pending = false;
+	enable_row_irqs(keypad);
+	spin_unlock_irq(&keypad->lock);
 }
 ```
 #### 4. O que faz readb(KMIDATA)?
