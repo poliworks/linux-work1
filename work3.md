@@ -491,11 +491,6 @@ o `dev_id` é então atribuído ao `kmi` (que é um `amba_kmi_port`) e é passad
 #### 3. Quando usamos a _system call_ `getchar()`, o caractér do teclado é lido de algum port. Na verdade, se lê a posição da tecla. Localize isso no código.
 No driver /drivers/input/keyboard/matrix_keypad.c, temos
 ```c
-/*
- * Returns the keycode from the input device keymap given the row and
- * column.
- */
-static int bcm_kp_get_keycode(struct bcm_kp *kp, int row, int col)
 static void matrix_keypad_scan(struct work_struct *work)
 {
 	struct matrix_keypad *keypad =
