@@ -8,4 +8,6 @@ elif [[ "$1" == "run" ]]; then
 elif [[ "$1" == "runS" ]]; then
   cd arch/arm/boot
   qemu-system-arm -M versatilepb -m 128M -kernel zImage -initrd rootfs -append "root=/dev/ram rdinit=/init" -s -S
+elif [[ "$1" == "debug" ]]; then
+  gnome-terminal --window-with-profile=default -e "arm-none-linux-gnueabi-gdb vmlinux"
 fi
