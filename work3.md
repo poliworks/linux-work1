@@ -549,6 +549,16 @@ static void matrix_keypad_scan(struct work_struct *work)
 }
 ```
 #### 4. O que faz readb(KMIDATA)?
+Em /arch/alpha/kernel/io.c, temos
+```c
+u8 readb(const volatile void __iomem *addr)
+{
+	u8 ret = __raw_readb(addr);
+	mb();
+	return ret;
+}
+```
+Podemos ver que readb lê um byte no endereço `*addr`. Primeiramente usamos o `__raw_readb(addr)`, depois atualizamos o cache com `mb()` (que utiliza uma barreira para evitar condições de corrida e depois atualiza o cache), finalmente retornamos o byte obtido.
 #### 5. O código lido deve ser guardado em um buffer enquanto o usuário não tecla ENTER. Localize isso no código.
 #### 6. Localize onde a função __wakeup() acorda o processo que lia da tty (dentro do kernel).
 Em /drivers/tty/tty_io.c, temos
