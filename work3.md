@@ -489,6 +489,20 @@ static irqreturn_t amba_kmi_int(int irq, void *dev_id)
 Podemos notar que o `amba_kmi_init` é chamado passando-se o `dev_id` (device id)
 o `dev_id` é então atribuído ao `kmi` (que é um `amba_kmi_port`) e é passado o `kmi->io` para o `serio_interrupt`
 #### 3. Quando usamos a _system call_ `getchar()`, o caractér do teclado é lido de algum port. Na verdade, se lê a posição da tecla. Localize isso no código.
+No driver /drivers/input/keyboard/bcm-keypad.c, temos
+```c
+/*
+ * Returns the keycode from the input device keymap given the row and
+ * column.
+ */
+static int bcm_kp_get_keycode(struct bcm_kp *kp, int row, int col)
+{
+	unsigned int row_shift = get_count_order(kp->n_cols);
+	unsigned short *keymap = kp->input_dev->keycode;
+
+	return keymap[MATRIX_SCAN_CODE(row, col, row_shift)];
+}
+```
 #### 4. O que faz readb(KMIDATA)?
 #### 5. O código lido deve ser guardado em um buffer enquanto o usuário não tecla ENTER. Localize isso no código.
 #### 6. Localize onde a função __wakeup() acorda o processo que lia da tty (dentro do kernel).
