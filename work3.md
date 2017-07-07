@@ -551,4 +551,21 @@ static void matrix_keypad_scan(struct work_struct *work)
 #### 4. O que faz readb(KMIDATA)?
 #### 5. O código lido deve ser guardado em um buffer enquanto o usuário não tecla ENTER. Localize isso no código.
 #### 6. Localize onde a função __wakeup() acorda o processo que lia da tty (dentro do kernel).
+Em /drivers/tty/tty_io.c, temos
+```c
+void tty_wakeup(struct tty_struct *tty)
+{
+	struct tty_ldisc *ld;
+
+	if (test_bit(TTY_DO_WRITE_WAKEUP, &tty->flags)) {
+		ld = tty_ldisc_ref(tty);
+		if (ld) {
+			if (ld->ops->write_wakeup)
+				ld->ops->write_wakeup(tty);
+			tty_ldisc_deref(ld);
+		}
+	}
+	wake_up_interruptible_poll(&tty->write_wait, POLLOUT);
+}
+```
 #### 7. Quando o usuário tecla ENTER, o processamento é diferente: os dados devem ser transferidos para o buffer de usuário. Localize isso no código.
