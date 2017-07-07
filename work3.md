@@ -470,6 +470,24 @@ Como podemos observar, ela depende da configuração `CONFIG_SPARSE_IRQ`
 
 
 #### 2. Localize onde o kernel passa o tratamento da interrupção para o driver adequado. Veja `amba_kmi_int`.
+```c
+static irqreturn_t amba_kmi_int(int irq, void *dev_id)
+{
+	struct amba_kmi_port *kmi = dev_id;
+	unsigned int status = readb(KMIIR);
+	int handled = IRQ_NONE;
+
+	while (status & KMIIR_RXINTR) {
+		serio_interrupt(kmi->io, readb(KMIDATA), 0);
+		status = readb(KMIIR);
+		handled = IRQ_HANDLED;
+	}
+
+	return handled;
+}
+```
+Podemos notar que o `amba_kmi_init` é chamado passando-se o `dev_id` (device id)
+o `dev_id` é então atribuído ao `kmi` (que é um `amba_kmi_port`) e é passado o `kmi->io` para o `serio_interrupt`
 #### 3. Quando usamos a _system call_ `getchar()`, o caractér do teclado é lido de algum port. Na verdade, se lê a posição da tecla. Localize isso no código.
 #### 4. O que faz readb(KMIDATA)?
 #### 5. O código lido deve ser guardado em um buffer enquanto o usuário não tecla ENTER. Localize isso no código.
