@@ -560,6 +560,42 @@ u8 readb(const volatile void __iomem *addr)
 ```
 Podemos ver que readb lê um byte no endereço `*addr`. Primeiramente usamos o `__raw_readb(addr)`, depois atualizamos o cache com `mb()`, que utiliza uma barreira para evitar condições de corrida `dsb()` e depois atualiza o cache `outer_sync()`, e finalmente retornamos o byte obtido.
 #### 5. O código lido deve ser guardado em um buffer enquanto o usuário não tecla ENTER. Localize isso no código.
+Em /drivers/tty/tty_buffer.c, o buffer é inicializado em
+```c
+void tty_buffer_init(struct tty_struct *tty)
+{
+	spin_lock_init(&tty->buf.lock);
+	tty->buf.head = NULL;
+	tty->buf.tail = NULL;
+	tty->buf.free = NULL;
+	tty->buf.memory_used = 0;
+	INIT_WORK(&tty->buf.work, flush_to_ldisc);
+}
+```
+E os dados são adicionados nele em
+```c
+int tty_insert_flip_string_fixed_flag(struct tty_struct *tty,
+		const unsigned char *chars, char flag, size_t size)
+{
+	int copied = 0;
+	do {
+		int goal = min_t(size_t, size - copied, TTY_BUFFER_PAGE);
+		int space = tty_buffer_request_room(tty, goal);
+		struct tty_buffer *tb = tty->buf.tail;
+		/* If there is no space then tb may be NULL */
+		if (unlikely(space == 0))
+			break;
+		memcpy(tb->char_buf_ptr + tb->used, chars, space);
+		memset(tb->flag_buf_ptr + tb->used, flag, space);
+		tb->used += space;
+		copied += space;
+		chars += space;
+		/* There is a small chance that we need to split the data over
+		   several buffers. If this is the case we must loop */
+	} while (unlikely(size > copied));
+	return copied;
+}
+```
 #### 6. Localize onde a função __wakeup() acorda o processo que lia da tty (dentro do kernel).
 Em /drivers/tty/tty_io.c, temos
 ```c
@@ -579,3 +615,26 @@ void tty_wakeup(struct tty_struct *tty)
 }
 ```
 #### 7. Quando o usuário tecla ENTER, o processamento é diferente: os dados devem ser transferidos para o buffer de usuário. Localize isso no código.
+Em /drivers/tty/tty_buffer.c, temos
+```c
+void tty_buffer_flush(struct tty_struct *tty)
+{
+	unsigned long flags;
+	spin_lock_irqsave(&tty->buf.lock, flags);
+
+	/* If the data is being pushed to the tty layer then we can't
+	   process it here. Instead set a flag and the flush_to_ldisc
+	   path will process the flush request before it exits */
+	if (test_bit(TTY_FLUSHING, &tty->flags)) {
+		set_bit(TTY_FLUSHPENDING, &tty->flags);
+		spin_unlock_irqrestore(&tty->buf.lock, flags);
+		wait_event(tty->read_wait,
+				test_bit(TTY_FLUSHPENDING, &tty->flags) == 0);
+		return;
+	} else
+		__tty_buffer_flush(tty);
+	spin_unlock_irqrestore(&tty->buf.lock, flags);
+}
+
+```
+
