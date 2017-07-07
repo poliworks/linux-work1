@@ -1,4 +1,3 @@
-## Traduzindo do Kinoshita-Language pra Liguagem Humana:
 ### Exercício 1
 #### 1. Localize onde a _system call sys_read_ chama, indiretamente, a função de leitura do driver da tty.
 Dado a implementacão da _system call sys_read_ em <fs/read_write.c>:
